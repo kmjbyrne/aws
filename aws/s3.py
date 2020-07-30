@@ -41,6 +41,11 @@ class S3Client(AWSClientBase):
         path = AWSS3_PUBLIC_URL.format(bucket_location['LocationConstraint'], bucket_name, key)
         return path
 
+    def presigned_post(self, bucket, key, acl=None):
+        if acl is None:
+            acl = [{'acl': 'public-read'}]
+        return self.client.generate_presigned_post(bucket, key, Conditions=acl)
+
     def delete(self, bucket, key) -> bool:
         """
         Handles the delete operation for bucket objects.
